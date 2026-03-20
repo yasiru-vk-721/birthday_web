@@ -965,8 +965,8 @@ export default function BirthdaySurpriseWebsite() {
         <section id="gallery-section" className="relative px-6 py-14 md:py-20">
           <div className="mx-auto max-w-6xl">
             <div className="mb-10 text-center">
-              <h2 className="text-3xl font-black md:text-5xl" style={{ fontFamily: scriptFont, fontWeight: 400 }}>A Gallery Full of Sweet Memories</h2>
-              <p className="mt-3 text-white/80">By the way, This is not much to show, but these are the moments that matter most.</p>
+              <h2 className="text-3xl font-black md:text-5xl" style={{ fontFamily: scriptFont, fontWeight: 400 }}>A Gallery of Sweet You</h2>
+              <p className="mt-3 text-white/80">By the way, This is not much to show, but these are the moments captured that matter most. See how tiny little rose became this beautiful person!</p>
             </div>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {photos.map((photo, index) => (
