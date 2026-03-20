@@ -28,11 +28,11 @@ const reasons = [
 ];
 
 const photos = [
-  { src: "/images/photo1.jpg", label: "Our Sweet Beginning", note: "The kind of memory that makes my heart smile instantly." },
-  { src: "/images/photo2.jpg", label: "Your Beautiful Smile", note: "One smile from you can brighten my whole day." },
-  { src: "/images/photo3.jpg", label: "A Moment I Love", note: "A soft little memory I would relive a thousand times." },
-  { src: "/images/photo4.jpg", label: "Pure Happiness", note: "This moment feels warm, lovely, and unforgettable." },
-  { src: "/images/photo5.jpg", label: "My Favorite View", note: "You, exactly as you are, will always be precious to me." },
+  { src: "/images/photo5.jpg", label: "Our Sweet Beginning", note: "The kind of memory that makes my heart smile instantly." },
+  { src: "/images/photo8.jpg", label: "Your Beautiful Smile", note: "One smile from you can brighten my whole day." },
+  { src: "/images/photo10.jpg", label: "A Moment I Love", note: "A soft little memory I would relive a thousand times." },
+  { src: "/images/photo16.jpg", label: "Pure Happiness", note: "This moment feels warm, lovely, and unforgettable." },
+  { src: "/images/photo19.jpg", label: "My Favorite View", note: "You, exactly as you are, will always be precious to me." },
   { src: "/images/photo6.jpg", label: "Forever Cute", note: "A tiny snapshot of the beauty you carry everywhere." }
 ];
 
@@ -464,6 +464,9 @@ function IntroLoader({ onEnter }) {
 
 export default function BirthdaySurpriseWebsite() {
   const [showIntro, setShowIntro] = useState(true);
+  const [musicVolume, setMusicVolume] = useState(0.55);
+  const [musicCurrentTime, setMusicCurrentTime] = useState(0);
+  const [musicDuration, setMusicDuration] = useState(0);
   const [introCountdown, setIntroCountdown] = useState(null);
   const [isCountingDown, setIsCountingDown] = useState(false);
   const [showSecret, setShowSecret] = useState(false);
@@ -553,17 +556,57 @@ export default function BirthdaySurpriseWebsite() {
     const audio = audioRef.current;
     if (!audio) return;
 
-    const handleCanPlay = () => setMusicReady(true);
+    const handleCanPlay = () => {
+      setMusicReady(true);
+      setMusicDuration(Number.isFinite(audio.duration) ? audio.duration : 0);
+    };
+    const handleLoadedMetadata = () => {
+      setMusicDuration(Number.isFinite(audio.duration) ? audio.duration : 0);
+    };
+    const handleTimeUpdate = () => setMusicCurrentTime(audio.currentTime || 0);
+    const handleVolumeChange = () => setMusicVolume(audio.volume || 0);
+    const handlePlay = () => setMusicPlaying(true);
+    const handlePause = () => setMusicPlaying(false);
     const handleEnded = () => setMusicPlaying(false);
 
     audio.addEventListener("canplay", handleCanPlay);
+    audio.addEventListener("loadedmetadata", handleLoadedMetadata);
+    audio.addEventListener("timeupdate", handleTimeUpdate);
+    audio.addEventListener("volumechange", handleVolumeChange);
+    audio.addEventListener("play", handlePlay);
+    audio.addEventListener("pause", handlePause);
     audio.addEventListener("ended", handleEnded);
 
     return () => {
       audio.removeEventListener("canplay", handleCanPlay);
+      audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
+      audio.removeEventListener("timeupdate", handleTimeUpdate);
+      audio.removeEventListener("volumechange", handleVolumeChange);
+      audio.removeEventListener("play", handlePlay);
+      audio.removeEventListener("pause", handlePause);
       audio.removeEventListener("ended", handleEnded);
     };
   }, []);
+
+  useEffect(() => {
+    if (showIntro) return;
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const timer = setTimeout(async () => {
+      if (!musicPlaying) {
+        try {
+          audio.volume = musicVolume;
+          await audio.play();
+          setMusicPlaying(true);
+        } catch (error) {
+          console.log("Music autoplay blocked until user interacts again.", error);
+        }
+      }
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [showIntro]);
 
   const handleOpen = async () => {
     setOpened(true);
@@ -575,17 +618,6 @@ export default function BirthdaySurpriseWebsite() {
     setTimeout(() => {
       window.scrollTo({ top: window.innerHeight * 0.92, behavior: "smooth" });
     }, 500);
-
-    const audio = audioRef.current;
-    if (audio && !musicPlaying) {
-      try {
-        audio.volume = 0.55;
-        await audio.play();
-        setMusicPlaying(true);
-      } catch (error) {
-        console.log("Music autoplay blocked until user interacts again.", error);
-      }
-    }
   };
 
   const handleFinale = () => {
@@ -610,12 +642,33 @@ export default function BirthdaySurpriseWebsite() {
     }
 
     try {
-      audio.volume = 0.55;
+      audio.volume = musicVolume;
       await audio.play();
       setMusicPlaying(true);
     } catch (error) {
       console.log("Unable to play audio.", error);
     }
+  };
+
+  const handleMusicSeek = (e) => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    const value = Number(e.target.value);
+    audio.currentTime = value;
+    setMusicCurrentTime(value);
+  };
+
+  const handleMusicVolume = (e) => {
+    const audio = audioRef.current;
+    const value = Number(e.target.value);
+    setMusicVolume(value);
+    if (audio) audio.volume = value;
+  };
+
+  const formatTime = (value) => {
+    const mins = Math.floor(value / 60);
+    const secs = Math.floor(value % 60);
+    return `${mins}:${String(secs).padStart(2, "0")}`;
   };
 
   const handleBlowCandles = () => {
@@ -781,65 +834,69 @@ export default function BirthdaySurpriseWebsite() {
             >
               <div className="rounded-[2rem] bg-gradient-to-br from-white/20 to-white/5 p-6">
                 <div className="mb-4 flex items-center gap-2 text-pink-100">
-                  <Sparkles className="h-5 w-5" />
-                  <p className="font-semibold">Pick a little birthday mood</p>
+                  <Music2 className="h-5 w-5" />
+                  <p className="font-semibold">Now playing for Theekshana 💖</p>
                 </div>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  {[
-                    {
-                      title: "Shower her with sparkles",
-                      text: "Launch a short dreamy sparkle burst across the page.",
-                      emoji: "✨",
-                      action: () => {
-                        setCelebrate(true);
-                        setFireworks(true);
-                        setShowSpotlight(true);
-                        setTimeout(() => setCelebrate(false), 2400);
-                        setTimeout(() => setFireworks(false), 3200);
-                        setTimeout(() => setShowSpotlight(false), 2800);
-                      },
-                      classes: "from-amber-200/15 to-rose-200/10"
-                    },
-                    {
-                      title: "Send floating love",
-                      text: "Create a soft romantic moment with hearts and glow.",
-                      emoji: "💖",
-                      action: () => {
-                        setShowSpotlight(true);
-                        setTimeout(() => setShowSpotlight(false), 2600);
-                      },
-                      classes: "from-rose-200/15 to-fuchsia-200/10"
-                    },
-                    {
-                      title: "Play the magic song",
-                      text: "Start or pause the romantic background music.",
-                      emoji: "🎶",
-                      action: toggleMusic,
-                      classes: "from-cyan-200/15 to-violet-200/10"
-                    },
-                    {
-                      title: "Light up the wish",
-                      text: "Jump into the cake moment and make the birthday wish.",
-                      emoji: "🎂",
-                      action: () => document.getElementById('cake-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' }),
-                      classes: "from-violet-200/15 to-amber-200/10"
-                    }
-                  ].map((item) => (
-                    <button
-                      key={item.title}
-                      onClick={item.action}
-                      className={`rounded-[1.6rem] border border-white/20 bg-gradient-to-br ${item.classes} p-5 text-left shadow-lg transition hover:scale-[1.02] hover:border-white/35`}
+
+                <div className="rounded-[1.8rem] border border-white/15 bg-black/10 p-5 shadow-inner">
+                  <div className="flex items-center gap-4">
+                    <motion.div
+                      animate={musicPlaying ? { scale: [1, 1.06, 1], rotate: [0, 2, -2, 0] } : { scale: 1, rotate: 0 }}
+                      transition={{ duration: 2.4, repeat: musicPlaying ? Infinity : 0 }}
+                      className="flex h-20 w-20 items-center justify-center rounded-[1.6rem] bg-gradient-to-br from-amber-200/30 via-rose-200/20 to-cyan-200/20 text-4xl shadow-lg"
                     >
-                      <div className="flex items-start justify-between gap-4">
-                        <div>
-                          <p className="text-sm uppercase tracking-[0.2em] text-white/65">Interactive moment</p>
-                          <p className="mt-2 text-2xl font-bold text-white">{item.title}</p>
-                          <p className="mt-2 text-sm text-white/75">{item.text}</p>
-                        </div>
-                        <span className="text-3xl">{item.emoji}</span>
-                      </div>
+                      🎵
+                    </motion.div>
+                    <div className="min-w-0 flex-1 text-left">
+                      <p className="text-xs uppercase tracking-[0.3em] text-white/55">Romantic Background Song</p>
+                      <h3 className="mt-2 truncate text-2xl font-bold text-white">romantic_song.mp3</h3>
+                      <p className="mt-1 text-sm text-white/70">
+                        {musicPlaying ? "Playing softly in the background" : musicReady ? "Ready to play your love song" : "Add the file to public/music"}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="mt-6">
+                    <input
+                      type="range"
+                      min="0"
+                      max={musicDuration || 0}
+                      step="0.1"
+                      value={Math.min(musicCurrentTime, musicDuration || 0)}
+                      onChange={handleMusicSeek}
+                      className="w-full accent-white"
+                    />
+                    <div className="mt-2 flex items-center justify-between text-xs text-white/65">
+                      <span>{formatTime(musicCurrentTime)}</span>
+                      <span>{formatTime(musicDuration)}</span>
+                    </div>
+                  </div>
+
+                  <div className="mt-5 flex flex-wrap items-center gap-4">
+                    <button
+                      onClick={toggleMusic}
+                      className="inline-flex items-center gap-3 rounded-full bg-white px-6 py-3 text-base font-bold text-fuchsia-700 shadow-xl transition hover:scale-105"
+                    >
+                      {musicPlaying ? <PauseCircle className="h-5 w-5" /> : <Music2 className="h-5 w-5" />}
+                      {musicPlaying ? "Pause Song" : "Play Song"}
                     </button>
-                  ))}
+
+                    <div className="min-w-[210px] flex-1 rounded-full border border-white/15 bg-white/10 px-4 py-3">
+                      <div className="mb-2 flex items-center justify-between text-xs uppercase tracking-[0.25em] text-white/60">
+                        <span className="inline-flex items-center gap-2"><Volume2 className="h-4 w-4" /> Volume</span>
+                        <span>{Math.round(musicVolume * 100)}%</span>
+                      </div>
+                      <input
+                        type="range"
+                        min="0"
+                        max="1"
+                        step="0.01"
+                        value={musicVolume}
+                        onChange={handleMusicVolume}
+                        className="w-full accent-white"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </motion.div>
