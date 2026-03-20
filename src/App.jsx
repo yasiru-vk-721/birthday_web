@@ -33,7 +33,21 @@ const photos = [
   { src: "/images/photo10.jpg", label: "A Moment I Love", note: "Cute little face that makes my heart skip a beat." },
   { src: "/images/photo16.jpg", label: "Pure Happiness", note: "Natural beauty that radiates warmth and joy." },
   { src: "/images/photo19.jpg", label: "My Favorite View", note: "You, exactly as you are, will always be precious to me." },
-  { src: "/images/photo26.jpg", label: "Forever Cute", note: "A tiny snapshot of the beauty you carry everywhere." }
+  { src: "/images/photo7.jpg", label: "Forever Cute", note: "A tiny snapshot of the beauty you carry everywhere." }
+];
+
+const slidingPhotos = [
+  "/images/photo14.jpg",
+  "/images/photo16.jpg",
+  "/images/photo17.jpg",
+  "/images/photo18.jpg",
+  "/images/photo19.jpg",
+  "/images/photo20.jpg",
+  "/images/photo21.jpg",
+  "/images/photo22.jpg",
+  "/images/photo23.jpg",
+  "/images/photo24.jpg",
+  "/images/photo26.jpg"
 ];
 
 const birthdayDate = new Date("2026-03-20T00:00:00+05:30");
@@ -427,6 +441,37 @@ function PhotoLightbox({ photo, onClose }) {
         </motion.div>
       )}
     </AnimatePresence>
+  );
+}
+
+function SlidingPhotoStrip() {
+  const loopedPhotos = [...slidingPhotos, ...slidingPhotos];
+
+  return (
+    <div className="relative overflow-hidden rounded-[2.4rem] border border-white/20 bg-white/10 py-5 shadow-2xl backdrop-blur-xl">
+      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-14 bg-gradient-to-r from-[#2a124f] via-[#2a124f]/70 to-transparent sm:w-24" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-14 bg-gradient-to-l from-[#173a5f] via-[#173a5f]/70 to-transparent sm:w-24" />
+
+      <motion.div
+        className="flex w-max gap-4 px-4 sm:gap-5 sm:px-5"
+        animate={{ x: ["0%", "-50%"] }}
+        transition={{ duration: 32, ease: "linear", repeat: Infinity }}
+      >
+        {loopedPhotos.map((src, index) => (
+          <div
+            key={`${src}-${index}`}
+            className="h-36 w-28 shrink-0 overflow-hidden rounded-[1.4rem] border border-white/15 bg-white/10 shadow-lg sm:h-48 sm:w-36 md:h-56 md:w-44"
+          >
+            <img
+              src={src}
+              alt={`Sliding memory ${index + 1}`}
+              className="h-full w-full object-cover"
+              loading="lazy"
+            />
+          </div>
+        ))}
+      </motion.div>
+    </div>
   );
 }
 
@@ -1173,6 +1218,29 @@ export default function BirthdaySurpriseWebsite() {
                 </motion.div>
               ))}
             </div>
+          </div>
+        </section>
+
+        <section className="relative px-6 py-14 md:py-20">
+          <div className="mx-auto max-w-6xl text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="mb-8"
+            >
+              <h2
+                className="text-3xl font-black md:text-5xl"
+                style={{ fontFamily: scriptFont, fontWeight: 400 }}
+              >
+                More Little Moments With You
+              </h2>
+              <p className="mx-auto mt-3 max-w-2xl text-white/80">
+                A soft endless stream of memories before your final birthday wish.
+              </p>
+            </motion.div>
+
+            <SlidingPhotoStrip />
           </div>
         </section>
 
