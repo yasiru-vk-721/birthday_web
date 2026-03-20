@@ -40,7 +40,7 @@ const birthdayDate = new Date("2026-03-20T00:00:00+05:30");
 
 const initialCandles = [true, true, true];
 const romanticSong = "/music/romantic-song.mp3";
-const secretCode = "navodi";
+const secretCode = "1217321";
 const countSound = "/sounds/count.mp3";
 const revealSound = "/sounds/reveal.mp3";
 const bodyFont = '"Poppins", sans-serif';
