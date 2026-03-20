@@ -11,9 +11,9 @@ const quotes = [
 ];
 
 const memories = [
-  { title: "The Day We Met", text: "The day we met felt like the beginning of something quietly beautiful, something my heart would never forget." },
-  { title: "Our Favorite Moment", text: "Every laugh, every little conversation, and every shared moment with you has become a memory I hold close." },
-  { title: "Today", text: "Today is for celebrating your smile, your heart, your softness, and all the beauty you bring into my life." }
+  { title: "The Day We Met", text: "The day we met felt like the beginning of something quietly beautiful, something my heart would never forget. You eyes were like sharp stars, lighting up my world. " },
+  { title: "Our Favorite Moment", text: "Every laugh, every little conversation, and every shared moment with you has become a memory I hold close. The only reason why I belive luck in my life." },
+  { title: "Today", text: "Today is for celebrating your smile, your heart, your softness, and all the beauty you bring into my life. Today is all about you Manika." }
 ];
 
 const reasons = [
@@ -28,12 +28,12 @@ const reasons = [
 ];
 
 const photos = [
-  { src: "/images/photo5.jpg", label: "Our Sweet Beginning", note: "The kind of memory that makes my heart smile instantly." },
-  { src: "/images/photo8.jpg", label: "Your Beautiful Smile", note: "One smile from you can brighten my whole day." },
-  { src: "/images/photo10.jpg", label: "A Moment I Love", note: "A soft little memory I would relive a thousand times." },
-  { src: "/images/photo16.jpg", label: "Pure Happiness", note: "This moment feels warm, lovely, and unforgettable." },
+  { src: "/images/photo5.jpg", label: "Our Sweet Beginning", note: "Beach, Sunset, You, Woah! I am living my best life with you." },
+  { src: "/images/photo8.jpg", label: "Your Beautiful Smile", note: "Even flowers can't compare to your smile." },
+  { src: "/images/photo10.jpg", label: "A Moment I Love", note: "Cute little face that makes my heart skip a beat." },
+  { src: "/images/photo16.jpg", label: "Pure Happiness", note: "Natural beauty that radiates warmth and joy." },
   { src: "/images/photo19.jpg", label: "My Favorite View", note: "You, exactly as you are, will always be precious to me." },
-  { src: "/images/photo6.jpg", label: "Forever Cute", note: "A tiny snapshot of the beauty you carry everywhere." }
+  { src: "/images/photo26.jpg", label: "Forever Cute", note: "A tiny snapshot of the beauty you carry everywhere." }
 ];
 
 const birthdayDate = new Date("2026-03-20T00:00:00+05:30");
@@ -449,8 +449,8 @@ function IntroLoader({ onEnter }) {
           <span style={{ fontFamily: scriptFont, fontWeight: 400 }}>A Birthday Surprise for</span>
           <span className="block not-italic" style={{ fontFamily: bodyFont, fontWeight: 900 }}>Theekshana Navodi</span>
         </h1>
-        <p className="mx-auto mt-4 max-w-2xl text-white/85 md:text-lg">A tiny dreamy world made with love, color, music, petals, memories, and a little bit of magic — only for you.</p>
-        <p className="mx-auto mt-3 max-w-xl text-sm uppercase tracking-[0.35em] text-white/60">Tap enter and enjoy a colorful 3 · 2 · 1 countdown</p>
+        <p className="mx-auto mt-4 max-w-2xl text-white/85 md:text-lg">A tiny dreamy world made with love, color, music, petals, memories, and a little bit of magic only for you.</p>
+        
         <button
           onClick={onEnter}
           className="mt-8 rounded-full bg-white px-8 py-4 font-bold text-fuchsia-700 shadow-2xl transition hover:scale-105"
@@ -786,7 +786,7 @@ export default function BirthdaySurpriseWebsite() {
                     Happy Birthday
                   </span>
                   <span className="block bg-gradient-to-r from-amber-200 via-rose-100 to-cyan-200 bg-clip-text text-transparent">
-                    Theekshana Navodi ✨
+                    Theekssss ✨
                   </span>
                 </h1>
                 <TypewriterText
@@ -795,7 +795,7 @@ export default function BirthdaySurpriseWebsite() {
                 />
               </div>
 
-              <div className="flex flex-wrap items-center justify-center gap-4 lg:justify-start">
+              <div className="flex flex-col items-stretch justify-center gap-4 sm:flex-row sm:flex-wrap sm:items-center lg:justify-start">
                 <button
                   onClick={toggleMusic}
                   className="inline-flex items-center gap-3 rounded-full border border-white/25 bg-white/10 px-7 py-4 text-base font-semibold text-white shadow-xl backdrop-blur-xl transition hover:scale-105"
@@ -839,17 +839,17 @@ export default function BirthdaySurpriseWebsite() {
                 </div>
 
                 <div className="rounded-[1.8rem] border border-white/15 bg-black/10 p-5 shadow-inner">
-                  <div className="flex items-center gap-4">
+                  <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
                     <motion.div
                       animate={musicPlaying ? { scale: [1, 1.06, 1], rotate: [0, 2, -2, 0] } : { scale: 1, rotate: 0 }}
                       transition={{ duration: 2.4, repeat: musicPlaying ? Infinity : 0 }}
-                      className="flex h-20 w-20 items-center justify-center rounded-[1.6rem] bg-gradient-to-br from-amber-200/30 via-rose-200/20 to-cyan-200/20 text-4xl shadow-lg"
+                      className="mx-auto flex h-20 w-20 shrink-0 items-center justify-center rounded-[1.6rem] bg-gradient-to-br from-amber-200/30 via-rose-200/20 to-cyan-200/20 text-4xl shadow-lg sm:mx-0"
                     >
                       🎵
                     </motion.div>
-                    <div className="min-w-0 flex-1 text-left">
-                      <p className="text-xs uppercase tracking-[0.3em] text-white/55">Romantic Background Song</p>
-                      <h3 className="mt-2 truncate text-2xl font-bold text-white">romantic_song.mp3</h3>
+                    <div className="min-w-0 flex-1 text-center sm:text-left">
+                      <p className="text-xs uppercase tracking-[0.3em] text-white/55">Now Playing...</p>
+                      <h3 className="mt-2 break-all text-2xl font-bold text-white sm:truncate">Theeks's Birthday Special Song</h3>
                       <p className="mt-1 text-sm text-white/70">
                         {musicPlaying ? "Playing softly in the background" : musicReady ? "Ready to play your love song" : "Add the file to public/music"}
                       </p>
@@ -872,7 +872,7 @@ export default function BirthdaySurpriseWebsite() {
                     </div>
                   </div>
 
-                  <div className="mt-5 flex flex-wrap items-center gap-4">
+                  <div className="mt-5 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center">
                     <button
                       onClick={toggleMusic}
                       className="inline-flex items-center gap-3 rounded-full bg-white px-6 py-3 text-base font-bold text-fuchsia-700 shadow-xl transition hover:scale-105"
@@ -881,7 +881,7 @@ export default function BirthdaySurpriseWebsite() {
                       {musicPlaying ? "Pause Song" : "Play Song"}
                     </button>
 
-                    <div className="min-w-[210px] flex-1 rounded-full border border-white/15 bg-white/10 px-4 py-3">
+                    <div className="w-full min-w-0 flex-1 rounded-[1.2rem] border border-white/15 bg-white/10 px-4 py-3 sm:min-w-[210px] sm:rounded-full">
                       <div className="mb-2 flex items-center justify-between text-xs uppercase tracking-[0.25em] text-white/60">
                         <span className="inline-flex items-center gap-2"><Volume2 className="h-4 w-4" /> Volume</span>
                         <span>{Math.round(musicVolume * 100)}%</span>
@@ -911,7 +911,7 @@ export default function BirthdaySurpriseWebsite() {
               viewport={{ once: true }}
               className="text-3xl font-black md:text-5xl"
             >
-              Cute Quotes for My Cuteeee 💖
+              Special Quotes for My Cute Princesss... 💖
             </motion.h2>
             <QuoteCarousel />
           </div>
@@ -921,7 +921,7 @@ export default function BirthdaySurpriseWebsite() {
           <div className="mx-auto max-w-6xl">
             <div className="mb-10 text-center">
               <h2 className="text-3xl font-black md:text-5xl" style={{ fontFamily: scriptFont, fontWeight: 400 }}>A Gallery Full of Sweet Memories</h2>
-              <p className="mt-3 text-white/80">Replace these cards with your real photos before sharing the surprise.</p>
+              <p className="mt-3 text-white/80">By the way, This is not much to show, but these are the moments that matter most.</p>
             </div>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {photos.map((photo, index) => (
@@ -999,12 +999,8 @@ export default function BirthdaySurpriseWebsite() {
                 </div>
 
                 <p className="mt-5 text-sm text-pink-100/90 md:text-base">
-                  After the candles go out, the page will automatically move to the happy birthday reveal section.
+                  Hoooorayyy! The candles are out and the magic is in the air. Scroll down for a very special birthday letter and some heart-melting reasons why you are the most amazing person ever!  
                 </p>
-                <div className="mt-6 rounded-[1.5rem] border border-white/15 bg-black/10 p-4 text-left text-sm text-white/75 md:text-base">
-                  <p className="font-semibold text-white">Romantic music setup</p>
-                  <p className="mt-2">Put your song here: <span className="font-mono text-pink-100">public/music/romantic-song.mp3</span></p>
-                </div>
               </div>
             </motion.div>
           </div>
@@ -1019,14 +1015,27 @@ export default function BirthdaySurpriseWebsite() {
               className="rounded-[2.2rem] border border-white/20 bg-white/10 p-8 shadow-2xl backdrop-blur-xl"
             >
               <div className="mb-5 inline-flex rounded-full bg-white/10 p-3">
-                <Heart className="h-6 w-6 text-pink-200" />
+              <Heart className="h-6 w-6 text-pink-200" />
               </div>
               <h2 className="text-3xl font-black" style={{ fontFamily: scriptFont, fontWeight: 400 }}>A Little Birthday Letter</h2>
               <p className="mt-5 leading-8 text-white/85">
-                Happy Birthday, my love. Today is all about you — your beautiful smile, your soft heart, your sweetness, and the quiet magic you bring into my life without even trying. Knowing you has made my world brighter, calmer, and more beautiful in ways I never want to lose.
+                💖🎂 Happy Birthday, my love 🎂💖
               </p>
+
               <p className="mt-5 leading-8 text-white/85">
-                I hope this year gives you more happiness than you expect, more peace than you ask for, and more beautiful moments than you can count. You deserve to feel loved, celebrated, appreciated, and treasured — not only today, but every single day. Thank you for being you, and thank you for being one of the most special parts of my life.
+                Today is all about <strong>you</strong> ✨  your beautiful smile 😊, your soft and kind heart 💕, your sweetness 🍯, and the quiet magic ✨ you bring into my life without even trying. Knowing you has made my world brighter 🌸, calmer 🌿, and more beautiful 🌈 in ways I never want to lose.
+              </p>
+
+              <p className="mt-5 leading-8 text-white/85">
+                I truly hope this year brings you more happiness than you expect 🌟, more peace than you ask for 🕊️, and more beautiful moments than you can ever count 🌷. You deserve to feel deeply loved ❤️, celebrated 🎉, appreciated 🌹, and treasured 💎 not just today, but every single day.
+              </p>
+
+              <p className="mt-5 leading-8 text-white/85">
+                Thank you for being you 🥺💗, and for being one of the most special parts of my life. <strong>Sudu Manikee</strong> 💞, I love you to the moon and back 🌙🚀, and I can’t wait to make more beautiful memories with you in the years to come.
+              </p>
+
+              <p className="mt-5 leading-8 text-white/85">
+                Happy Birthday again, <strong>chukkiyooooooooo</strong> 🥰🎈🎁
               </p>
             </motion.div>
           </div>
@@ -1035,7 +1044,7 @@ export default function BirthdaySurpriseWebsite() {
         <section className="relative px-6 py-14 md:py-20">
           <div className="mx-auto max-w-6xl">
             <div className="mb-10 text-center">
-              <h2 className="text-3xl font-black md:text-5xl" style={{ fontFamily: scriptFont, fontWeight: 400 }}>Reasons Why You Are So Special</h2>
+              <h2 className="text-3xl font-black md:text-5xl" style={{ fontFamily: scriptFont, fontWeight: 400 }}>Reasons Why You Are So Special Sudu Manika..</h2>
               <p className="mt-3 text-white/80">Tap each card for a cute little reveal.</p>
             </div>
             <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
@@ -1059,7 +1068,7 @@ export default function BirthdaySurpriseWebsite() {
                 A little secret just for you 💌
               </h3>
               <p className="mx-auto mt-4 max-w-2xl text-white/80">
-                This tiny secret opens only with a special passcode and reveals a letter waiting inside a beautiful envelope.
+                This tiny secret opens only with a special passcode. If you know you know the passcode. I am not going to give you any hints here. Hee heee. 
               </p>
 
               <div className="mx-auto mt-8 max-w-xl rounded-[2rem] border border-white/15 bg-black/10 p-6 shadow-xl">
@@ -1113,18 +1122,19 @@ export default function BirthdaySurpriseWebsite() {
                       </button>
                       <p className="text-xs font-bold uppercase tracking-[0.35em] text-rose-400">Secret Note</p>
                       <h4 className="mt-3 text-3xl text-rose-500 md:text-4xl" style={{ fontFamily: scriptFont, fontWeight: 400 }}>
-                        For Theekshana Navodi
+                        For Beloved Theeks..
                       </h4>
                       <div className="mt-4 h-px w-full bg-gradient-to-r from-amber-300 via-rose-300 to-cyan-300" />
-                      <p className="mt-5 text-slate-700" style={{ fontFamily: scriptFont, fontSize: '1.4rem', lineHeight: 1.85 }}>
-                        You are one of the loveliest parts of my life. Your smile has a way of making everything softer,
-                        brighter, and more beautiful. Even on ordinary days, just thinking of you feels like a little kind
-                        of magic.
+                      {/* Kiss 1 */}
+                      <p className="mt-5 text-slate-700 flex items-center gap-2" 
+                        style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '1.4rem', lineHeight: 1.85 }}>
+                        Ummmmmaaaaaaaaaaaahhhhhhhhhhhhhhh 💋✨
                       </p>
-                      <p className="mt-4 text-slate-700" style={{ fontFamily: scriptFont, fontSize: '1.4rem', lineHeight: 1.85 }}>
-                        On your birthday, I just want you to feel how deeply special you are — not only today, but every day.
-                        You deserve happiness that stays, love that feels safe, and moments so beautiful they become memories
-                        your heart keeps forever.
+
+                      {/* Kiss 2 */}
+                      <p className="mt-4 text-slate-700 flex items-center gap-2" 
+                        style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '1.4rem', lineHeight: 1.85 }}>
+                        Mmmmmmmwwwwwwaaaaaaahhhhhhhh 😘❤️🔥
                       </p>
                       <p className="mt-5 text-rose-500" style={{ fontFamily: scriptFont, fontSize: '1.6rem', fontWeight: 400 }}>
                         With all my love 💖
@@ -1140,8 +1150,8 @@ export default function BirthdaySurpriseWebsite() {
         <section id="timeline-section" className="relative px-6 py-14 md:py-20">
           <div className="mx-auto max-w-5xl rounded-[2.5rem] border border-white/20 bg-white/10 p-8 shadow-2xl backdrop-blur-xl md:p-10">
             <div className="mb-8 text-center">
-              <h2 className="text-3xl font-black md:text-5xl" style={{ fontFamily: scriptFont, fontWeight: 400 }}>Our Little Love Timeline</h2>
-              <p className="mt-3 text-white/80">A soft, sweet story section you can personalize later.</p>
+              <h2 className="text-3xl font-black md:text-5xl" style={{ fontFamily: scriptFont, fontWeight: 400 }}>Me & Sudu Bole's Love Timeline</h2>
+              <p className="mt-3 text-white/80">Memories that make our love story even more special</p>
             </div>
             <div className="space-y-6">
               {memories.map((memory, index) => (
@@ -1181,15 +1191,15 @@ export default function BirthdaySurpriseWebsite() {
               </div>
               <h2 className="text-4xl font-black md:text-6xl">
                 <span style={{ fontFamily: scriptFont, fontWeight: 400 }}>Happy Birthday,</span>
-                <span className="block" style={{ fontFamily: bodyFont, fontWeight: 900 }}>Theekshana Navodi 💗</span>
+                <span className="block" style={{ fontFamily: bodyFont, fontWeight: 900 }}>Theekssssss 💗</span>
               </h2>
               <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-white/85 md:text-xl">
-                May your heart stay light, your smile stay bright, and your life stay filled with beautiful surprises. You
-                deserve all the love, joy, peace, and magic today and always.
+                Sudu Bolee, May your heart stay light, your smile stay bright, and your life stay filled with beautiful surprises. You
+                deserve all the love, joy, peace, and magic today and always. Enjoy your special day to the fullest, and remember that you are deeply loved and cherished by me and so many others. Happy Birthday, Theeks!
               </p>
               <button
                 onClick={handleFinale}
-                className="mt-8 inline-flex items-center gap-3 rounded-full bg-white px-8 py-4 font-bold text-fuchsia-700 shadow-2xl transition hover:scale-105"
+                className="inline-flex w-full items-center justify-center gap-3 rounded-full bg-white px-6 py-3 text-base font-bold text-fuchsia-700 shadow-xl transition hover:scale-105 sm:w-auto"
               >
                 <Sparkles className="h-5 w-5" />
                 One More Fireworks Finale
