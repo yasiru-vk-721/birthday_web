@@ -37,17 +37,21 @@ const photos = [
 ];
 
 const slidingPhotos = [
+  "/images/photo11.jpg",
   "/images/photo14.jpg",
-  "/images/photo16.jpg",
   "/images/photo17.jpg",
-  "/images/photo18.jpg",
-  "/images/photo19.jpg",
-  "/images/photo20.jpg",
-  "/images/photo21.jpg",
   "/images/photo22.jpg",
+  "/images/photo3.jpg",
   "/images/photo23.jpg",
+  "/images/photo21.jpg",
   "/images/photo24.jpg",
-  "/images/photo26.jpg"
+  "/images/photo26.jpg",  
+  "/images/photo20.jpg",
+  "/images/photo9.jpg",
+  "/images/photo1.jpg",
+  "/images/photo18.jpg",
+  "/images/photo13.jpg"
+
 ];
 
 const birthdayDate = new Date("2026-03-20T00:00:00+05:30");
