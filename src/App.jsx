@@ -603,7 +603,7 @@ export default function BirthdaySurpriseWebsite() {
           console.log("Music autoplay blocked until user interacts again.", error);
         }
       }
-    }, 2000);
+    });
 
     return () => clearTimeout(timer);
   }, [showIntro]);
