@@ -40,6 +40,11 @@ const birthdayDate = new Date("2026-03-20T00:00:00+05:30");
 
 const initialCandles = [true, true, true];
 const romanticSong = "/music/romantic-song.mp3";
+const secretCode = "navodi";
+const countSound = "/sounds/count.mp3";
+const revealSound = "/sounds/reveal.mp3";
+const bodyFont = '"Poppins", sans-serif';
+const scriptFont = '"Great Vibes", cursive';
 
 function pad(value) {
   return String(value).padStart(2, "0");
@@ -440,8 +445,12 @@ function IntroLoader({ onEnter }) {
         >
           💖
         </motion.div>
-        <h1 className="bg-gradient-to-r from-amber-200 via-rose-100 to-cyan-200 bg-clip-text text-4xl font-black text-transparent md:text-6xl">A Birthday Surprise for Theekshana Navodi</h1>
+        <h1 className="bg-gradient-to-r from-amber-200 via-rose-100 to-cyan-200 bg-clip-text text-4xl font-black text-transparent md:text-6xl">
+          <span style={{ fontFamily: scriptFont, fontWeight: 400 }}>A Birthday Surprise for</span>
+          <span className="block not-italic" style={{ fontFamily: bodyFont, fontWeight: 900 }}>Theekshana Navodi</span>
+        </h1>
         <p className="mx-auto mt-4 max-w-2xl text-white/85 md:text-lg">A tiny dreamy world made with love, color, music, petals, memories, and a little bit of magic — only for you.</p>
+        <p className="mx-auto mt-3 max-w-xl text-sm uppercase tracking-[0.35em] text-white/60">Tap enter and enjoy a colorful 3 · 2 · 1 countdown</p>
         <button
           onClick={onEnter}
           className="mt-8 rounded-full bg-white px-8 py-4 font-bold text-fuchsia-700 shadow-2xl transition hover:scale-105"
@@ -455,7 +464,13 @@ function IntroLoader({ onEnter }) {
 
 export default function BirthdaySurpriseWebsite() {
   const [showIntro, setShowIntro] = useState(true);
+  const [introCountdown, setIntroCountdown] = useState(null);
+  const [isCountingDown, setIsCountingDown] = useState(false);
   const [showSecret, setShowSecret] = useState(false);
+  const [secretPasscode, setSecretPasscode] = useState("");
+  const [secretUnlocked, setSecretUnlocked] = useState(false);
+  const [secretError, setSecretError] = useState("");
+  const [showEnvelope, setShowEnvelope] = useState(false);
   const [lightboxPhoto, setLightboxPhoto] = useState(null);
   const [opened, setOpened] = useState(false);
   const [celebrate, setCelebrate] = useState(false);
@@ -469,6 +484,8 @@ export default function BirthdaySurpriseWebsite() {
   const [showSpotlight, setShowSpotlight] = useState(false);
   const finalRef = useRef(null);
   const audioRef = useRef(null);
+  const countAudioRef = useRef(null);
+  const revealAudioRef = useRef(null);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -476,6 +493,60 @@ export default function BirthdaySurpriseWebsite() {
     }, 1000);
     return () => clearInterval(timer);
   }, []);
+
+  useEffect(() => {
+    if (introCountdown === null) return;
+
+    const countAudio = countAudioRef.current;
+    const revealAudio = revealAudioRef.current;
+
+    if (introCountdown > 0 && countAudio) {
+      try {
+        countAudio.currentTime = 0;
+        countAudio.volume = 0.35;
+        const playPromise = countAudio.play();
+        if (playPromise && typeof playPromise.catch === "function") playPromise.catch(() => {});
+      } catch {}
+    }
+
+    if (introCountdown === 0) {
+      if (revealAudio) {
+        try {
+          revealAudio.currentTime = 0;
+          revealAudio.volume = 0.45;
+          const playPromise = revealAudio.play();
+          if (playPromise && typeof playPromise.catch === "function") playPromise.catch(() => {});
+        } catch {}
+      }
+
+      setCelebrate(true);
+      setFireworks(true);
+      setShowSpotlight(true);
+
+      const timer = setTimeout(() => {
+        setShowIntro(false);
+        setIntroCountdown(null);
+        setIsCountingDown(false);
+      }, 900);
+
+      const fxTimer = setTimeout(() => {
+        setCelebrate(false);
+        setFireworks(false);
+        setShowSpotlight(false);
+      }, 4200);
+
+      return () => {
+        clearTimeout(timer);
+        clearTimeout(fxTimer);
+      };
+    }
+
+    const timer = setTimeout(() => {
+      setIntroCountdown((prev) => (prev !== null ? prev - 1 : prev));
+    }, 850);
+
+    return () => clearTimeout(timer);
+  }, [introCountdown]);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -571,11 +642,60 @@ export default function BirthdaySurpriseWebsite() {
     setTimeout(() => setBlowing(false), 9000);
   };
 
+  const handleSecretUnlock = () => {
+    if (secretPasscode.trim().toLowerCase() === secretCode) {
+      setSecretUnlocked(true);
+      setSecretError("");
+      setTimeout(() => setShowEnvelope(true), 250);
+    } else {
+      setSecretUnlocked(false);
+      setShowEnvelope(false);
+      setSecretError("That passcode is not quite right. Try the special word again ✨");
+    }
+  };
+
   return (
-    <div className="min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top,#ffd166_0%,#ff8fab_18%,#c084fc_36%,#60a5fa_58%,#14b8a6_78%,#0f172a_100%)] text-white">
-      <AnimatePresence>{showIntro && <IntroLoader onEnter={() => setShowIntro(false)} />}</AnimatePresence>
+    <div className="min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top,#ffd166_0%,#ff8fab_18%,#c084fc_36%,#60a5fa_58%,#14b8a6_78%,#0f172a_100%)] text-white" style={{ fontFamily: bodyFont }}>
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;500;600;700;800;900&display=swap');`}</style>
+      <AnimatePresence>{showIntro && <IntroLoader onEnter={() => {
+        if (isCountingDown) return;
+        setIsCountingDown(true);
+        setIntroCountdown(3);
+      }} />}</AnimatePresence>
+      <AnimatePresence>
+        {introCountdown !== null && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[110] flex items-center justify-center bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.18),rgba(15,23,42,0.75))] backdrop-blur-sm"
+          >
+            <motion.div
+              key={introCountdown}
+              initial={{ scale: 0.4, opacity: 0, rotate: -10 }}
+              animate={{ scale: 1, opacity: 1, rotate: 0 }}
+              exit={{ scale: 1.4, opacity: 0, rotate: 10 }}
+              transition={{ duration: 0.55, ease: "easeOut" }}
+              className="relative flex h-44 w-44 items-center justify-center rounded-full border border-white/30 bg-[conic-gradient(from_180deg_at_50%_50%,#f59e0b_0%,#fb7185_22%,#a855f7_48%,#38bdf8_74%,#14b8a6_100%)] p-[6px] shadow-[0_0_60px_rgba(255,255,255,0.2)] md:h-56 md:w-56"
+            >
+              <div className="flex h-full w-full items-center justify-center rounded-full bg-slate-900/75 text-center shadow-inner">
+                <div>
+                  <p className="mb-2 text-xs uppercase tracking-[0.35em] text-white/70">
+                    {introCountdown === 0 ? "Birthday Magic" : "Get Ready"}
+                  </p>
+                  <p className="bg-gradient-to-r from-amber-200 via-rose-100 to-cyan-200 bg-clip-text text-6xl font-black text-transparent md:text-8xl">
+                    {introCountdown === 0 ? "Let's celebrate!" : introCountdown}
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <PhotoLightbox photo={lightboxPhoto} onClose={() => setLightboxPhoto(null)} />
       <audio ref={audioRef} src={romanticSong} loop preload="auto" />
+      <audio ref={countAudioRef} src={countSound} preload="auto" />
+      <audio ref={revealAudioRef} src={revealSound} preload="auto" />
       <StarGlowBackground />
       <RosePetals />
       {cinematicMode && <div className="pointer-events-none fixed inset-0 z-[45] bg-black/10" />}
@@ -608,7 +728,9 @@ export default function BirthdaySurpriseWebsite() {
 
               <div className="space-y-4">
                 <h1 className="text-5xl font-black leading-tight md:text-7xl">
-                  Happy Birthday
+                  <span className="block text-white/95" style={{ fontFamily: scriptFont, fontWeight: 400 }}>
+                    Happy Birthday
+                  </span>
                   <span className="block bg-gradient-to-r from-amber-200 via-rose-100 to-cyan-200 bg-clip-text text-transparent">
                     Theekshana Navodi ✨
                   </span>
@@ -705,7 +827,7 @@ export default function BirthdaySurpriseWebsite() {
         <section className="relative px-6 py-14 md:py-20">
           <div className="mx-auto max-w-6xl">
             <div className="mb-10 text-center">
-              <h2 className="text-3xl font-black md:text-5xl">A Gallery Full of Sweet Memories</h2>
+              <h2 className="text-3xl font-black md:text-5xl" style={{ fontFamily: scriptFont, fontWeight: 400 }}>A Gallery Full of Sweet Memories</h2>
               <p className="mt-3 text-white/80">Replace these cards with your real photos before sharing the surprise.</p>
             </div>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -726,7 +848,9 @@ export default function BirthdaySurpriseWebsite() {
         <section className="relative px-6 py-16 md:py-24">
           <div className="mx-auto max-w-6xl">
             <div className="mb-10 text-center">
-              <h2 className="text-4xl font-black md:text-6xl">The Main Birthday Moment 🎂</h2>
+              <h2 className="text-4xl font-black md:text-6xl">
+                <span style={{ fontFamily: scriptFont, fontWeight: 400 }}>The Main Birthday Moment</span> 🎂
+              </h2>
               <p className="mt-3 text-lg text-white/80">Make a wish, blow the candles, and watch the magic begin.</p>
             </div>
 
@@ -804,7 +928,7 @@ export default function BirthdaySurpriseWebsite() {
               <div className="mb-5 inline-flex rounded-full bg-white/10 p-3">
                 <Heart className="h-6 w-6 text-pink-200" />
               </div>
-              <h2 className="text-3xl font-black">A Little Birthday Letter</h2>
+              <h2 className="text-3xl font-black" style={{ fontFamily: scriptFont, fontWeight: 400 }}>A Little Birthday Letter</h2>
               <p className="mt-5 leading-8 text-white/85">
                 Happy Birthday, my love. Today is all about you — your beautiful smile, your soft heart, your sweetness, and the quiet magic you bring into my life without even trying. Knowing you has made my world brighter, calmer, and more beautiful in ways I never want to lose.
               </p>
@@ -818,7 +942,7 @@ export default function BirthdaySurpriseWebsite() {
         <section className="relative px-6 py-14 md:py-20">
           <div className="mx-auto max-w-6xl">
             <div className="mb-10 text-center">
-              <h2 className="text-3xl font-black md:text-5xl">Reasons Why You Are So Special</h2>
+              <h2 className="text-3xl font-black md:text-5xl" style={{ fontFamily: scriptFont, fontWeight: 400 }}>Reasons Why You Are So Special</h2>
               <p className="mt-3 text-white/80">Tap each card for a cute little reveal.</p>
             </div>
             <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
@@ -830,30 +954,87 @@ export default function BirthdaySurpriseWebsite() {
         </section>
 
         <section className="relative px-6 py-10 md:py-14">
-          <div className="mx-auto max-w-4xl text-center">
+          <div className="mx-auto max-w-5xl text-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="rounded-[2.4rem] border border-white/20 bg-gradient-to-br from-amber-200/10 via-white/10 to-cyan-200/10 p-8 shadow-2xl backdrop-blur-xl"
+              className="rounded-[2.7rem] border border-white/20 bg-gradient-to-br from-amber-200/10 via-rose-200/10 to-cyan-200/10 p-8 shadow-2xl backdrop-blur-xl md:p-10"
             >
-              <p className="text-sm uppercase tracking-[0.3em] text-white/70">Hidden Surprise</p>
-              <h3 className="mt-3 text-3xl font-black md:text-4xl">A little secret just for you 💌</h3>
-              <button
-                onClick={() => setShowSecret((prev) => !prev)}
-                className="mt-6 rounded-full bg-white px-7 py-3 font-bold text-fuchsia-700 shadow-xl transition hover:scale-105"
-              >
-                {showSecret ? "Hide Secret Message" : "Open Secret Message"}
-              </button>
-              <AnimatePresence>
-                {showSecret && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 12, scale: 0.96 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 10, scale: 0.96 }}
-                    className="mx-auto mt-6 max-w-2xl rounded-[1.8rem] border border-white/15 bg-black/10 p-6 text-left text-white/85"
+              <p className="text-sm uppercase tracking-[0.35em] text-white/70">Hidden Surprise</p>
+              <h3 className="mt-3 bg-gradient-to-r from-amber-200 via-rose-100 to-cyan-200 bg-clip-text text-3xl text-transparent md:text-5xl" style={{ fontFamily: scriptFont, fontWeight: 400 }}>
+                A little secret just for you 💌
+              </h3>
+              <p className="mx-auto mt-4 max-w-2xl text-white/80">
+                This tiny secret opens only with a special passcode and reveals a letter waiting inside a beautiful envelope.
+              </p>
+
+              <div className="mx-auto mt-8 max-w-xl rounded-[2rem] border border-white/15 bg-black/10 p-6 shadow-xl">
+                <label className="mb-3 block text-left text-sm font-semibold uppercase tracking-[0.2em] text-white/70">
+                  Enter passcode
+                </label>
+                <div className="flex flex-col gap-4 sm:flex-row">
+                  <input
+                    type="password"
+                    value={secretPasscode}
+                    onChange={(e) => {
+                      setSecretPasscode(e.target.value);
+                      setSecretError("");
+                    }}
+                    placeholder="Enter the secret passcode"
+                    className="w-full rounded-full border border-white/20 bg-white/10 px-5 py-4 text-white placeholder:text-white/45 outline-none ring-0 backdrop-blur-xl"
+                  />
+                  <button
+                    onClick={handleSecretUnlock}
+                    className="rounded-full bg-white px-7 py-4 font-bold text-fuchsia-700 shadow-xl transition hover:scale-105"
                   >
-                    If I could gift you one thing beyond flowers, music, and memories, it would be the ability to see yourself the way my heart sees you — lovely, precious, radiant, and deeply unforgettable.
+                    Open Secret Message
+                  </button>
+                </div>
+                {secretError && <p className="mt-4 text-left text-sm text-rose-200">{secretError}</p>}
+              </div>
+
+              <AnimatePresence>
+                {secretUnlocked && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 24 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 16 }}
+                    className="mx-auto mt-10 max-w-3xl"
+                  >
+                    <div className="relative mx-auto h-[360px] w-full max-w-2xl">
+                      <motion.div
+                        initial={{ scaleY: 1 }}
+                        animate={{ scaleY: showEnvelope ? 0 : 1 }}
+                        transition={{ duration: 0.8, ease: "easeInOut" }}
+                        className="absolute left-1/2 top-[74px] z-20 h-[120px] w-[85%] origin-top -translate-x-1/2 rounded-t-[2rem] bg-gradient-to-b from-rose-300 via-pink-300 to-fuchsia-400 shadow-[0_20px_40px_rgba(0,0,0,0.2)]"
+                        style={{ clipPath: "polygon(0 0, 100% 0, 50% 100%)" }}
+                      />
+
+                      <div className="absolute bottom-0 left-1/2 z-10 h-[220px] w-[85%] -translate-x-1/2 rounded-[2rem] bg-gradient-to-br from-amber-100 via-rose-100 to-cyan-100 shadow-[0_25px_60px_rgba(0,0,0,0.25)]" />
+
+                      <motion.div
+                        initial={{ y: 120, opacity: 0 }}
+                        animate={showEnvelope ? { y: -10, opacity: 1 } : { y: 120, opacity: 0 }}
+                        transition={{ duration: 0.9, delay: 0.35, ease: "easeOut" }}
+                        className="absolute left-1/2 top-[120px] z-30 w-[72%] -translate-x-1/2 rounded-[1.8rem] border border-amber-200/60 bg-[linear-gradient(180deg,#fffdf6_0%,#fff7ed_100%)] p-6 text-left text-slate-700 shadow-[0_20px_50px_rgba(0,0,0,0.22)] md:p-8"
+                      >
+                        <p className="text-xs font-bold uppercase tracking-[0.35em] text-rose-400">Secret Letter</p>
+                        <h4 className="mt-3 text-2xl text-rose-500 md:text-3xl" style={{ fontFamily: scriptFont, fontWeight: 400 }}>For Theekshana Navodi</h4>
+                        <div className="mt-4 h-px w-full bg-gradient-to-r from-amber-300 via-rose-300 to-cyan-300" />
+                        <p className="mt-5 leading-8 text-slate-700" style={{ fontFamily: scriptFont, fontSize: '1.35rem', lineHeight: 1.8 }}>
+                          You are one of the loveliest parts of my life. Your smile has a way of making everything softer,
+                          brighter, and more beautiful. Even on ordinary days, just thinking of you feels like a little kind
+                          of magic.
+                        </p>
+                        <p className="mt-4 leading-8 text-slate-700" style={{ fontFamily: scriptFont, fontSize: '1.35rem', lineHeight: 1.8 }}>
+                          On your birthday, I just want you to feel how deeply special you are — not only today, but every day.
+                          You deserve happiness that stays, love that feels safe, and moments so beautiful they become memories
+                          your heart keeps forever.
+                        </p>
+                        <p className="mt-4 font-semibold text-rose-500" style={{ fontFamily: scriptFont, fontSize: '1.5rem', fontWeight: 400 }}>With all my love 💖</p>
+                      </motion.div>
+                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -864,7 +1045,7 @@ export default function BirthdaySurpriseWebsite() {
         <section className="relative px-6 py-14 md:py-20">
           <div className="mx-auto max-w-5xl rounded-[2.5rem] border border-white/20 bg-white/10 p-8 shadow-2xl backdrop-blur-xl md:p-10">
             <div className="mb-8 text-center">
-              <h2 className="text-3xl font-black md:text-5xl">Our Little Love Timeline</h2>
+              <h2 className="text-3xl font-black md:text-5xl" style={{ fontFamily: scriptFont, fontWeight: 400 }}>Our Little Love Timeline</h2>
               <p className="mt-3 text-white/80">A soft, sweet story section you can personalize later.</p>
             </div>
             <div className="space-y-6">
@@ -903,7 +1084,10 @@ export default function BirthdaySurpriseWebsite() {
                 <Sparkles className="h-7 w-7 text-yellow-200" />
                 <Heart className="h-7 w-7 fill-pink-200 text-pink-200" />
               </div>
-              <h2 className="text-4xl font-black md:text-6xl">Happy Birthday, Theekshana Navodi 💗</h2>
+              <h2 className="text-4xl font-black md:text-6xl">
+                <span style={{ fontFamily: scriptFont, fontWeight: 400 }}>Happy Birthday,</span>
+                <span className="block" style={{ fontFamily: bodyFont, fontWeight: 900 }}>Theekshana Navodi 💗</span>
+              </h2>
               <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-white/85 md:text-xl">
                 May your heart stay light, your smile stay bright, and your life stay filled with beautiful surprises. You
                 deserve all the love, joy, peace, and magic today and always.
