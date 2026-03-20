@@ -450,7 +450,7 @@ function IntroLoader({ onEnter }) {
           <span className="block not-italic" style={{ fontFamily: bodyFont, fontWeight: 900 }}>Theekshana Navodi</span>
         </h1>
         <p className="mx-auto mt-4 max-w-2xl text-white/85 md:text-lg">A tiny dreamy world made with love, color, music, petals, memories, and a little bit of magic only for you.</p>
-        
+        <p className="mx-auto mt-4 max-w-2xl text-white/85 md:text-lg">Please wait 5 seconds here... Then touch the button to enter the surprise!</p>
         <button
           onClick={onEnter}
           className="mt-8 rounded-full bg-white px-8 py-4 font-bold text-fuchsia-700 shadow-2xl transition hover:scale-105"
