@@ -865,7 +865,7 @@ export default function BirthdaySurpriseWebsite() {
                   </p>
                   <p className="inline-flex items-center gap-2 text-sm text-white/80">
                     <Volume2 className="h-4 w-4" />
-                    {musicReady ? "Song file detected. Use public/music/romantic-song.mp3" : "Add your song to public/music/romantic-song.mp3"}
+                    {musicReady ? "" : ""}
                   </p>
                 </div>
               )}
@@ -894,7 +894,7 @@ export default function BirthdaySurpriseWebsite() {
                     </motion.div>
                     <div className="min-w-0 flex-1 text-center sm:text-left">
                       <p className="text-xs uppercase tracking-[0.3em] text-white/55">Now Playing...</p>
-                      <h3 className="mt-2 break-all text-2xl font-bold text-white sm:truncate">Theeks's Birthday Special Song</h3>
+                      <h3 className="mt-2 break-all text-2xl font-bold text-white sm:truncate">Theeks Birthday Special Song</h3>
                       <p className="mt-1 text-sm text-white/70">
                         {musicPlaying ? "Playing softly in the background" : musicReady ? "Ready to play your love song" : "Add the file to public/music"}
                       </p>
@@ -1173,13 +1173,13 @@ export default function BirthdaySurpriseWebsite() {
                       {/* Kiss 1 */}
                       <p className="mt-5 text-slate-700 flex items-center gap-2" 
                         style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '1.4rem', lineHeight: 1.85 }}>
-                        Ummmmmaaaaaaaaaaaahhhhhhhhhhhhhhh 💋✨
+                        Ummmaaaahhhh 💋✨
                       </p>
 
                       {/* Kiss 2 */}
                       <p className="mt-4 text-slate-700 flex items-center gap-2" 
                         style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '1.4rem', lineHeight: 1.85 }}>
-                        Mmmmmmmwwwwwwaaaaaaahhhhhhhh 😘❤️🔥
+                        Mmmwwwaahhh 😘❤️
                       </p>
                       <p className="mt-5 text-rose-500" style={{ fontFamily: scriptFont, fontSize: '1.6rem', fontWeight: 400 }}>
                         With all my love 💖
