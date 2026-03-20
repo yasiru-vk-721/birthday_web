@@ -33,25 +33,22 @@ const photos = [
   { src: "/images/photo10.jpg", label: "A Moment I Love", note: "Cute little face that makes my heart skip a beat." },
   { src: "/images/photo16.jpg", label: "Pure Happiness", note: "Natural beauty that radiates warmth and joy." },
   { src: "/images/photo19.jpg", label: "My Favorite View", note: "You, exactly as you are, will always be precious to me." },
-  { src: "/images/photo7.jpg", label: "Forever Cute", note: "A tiny snapshot of the beauty you carry everywhere." }
+  { src: "/images/photo26.jpg", label: "Forever Cute", note: "A tiny snapshot of the beauty you carry everywhere." }
 ];
 
 const slidingPhotos = [
-  "/images/photo11.jpg",
-  "/images/photo14.jpg",
+  "/images/photo15.jpg",
+  "/images/photo16.jpg",
   "/images/photo17.jpg",
-  "/images/photo22.jpg",
-  "/images/photo3.jpg",
-  "/images/photo23.jpg",
-  "/images/photo21.jpg",
-  "/images/photo24.jpg",
-  "/images/photo26.jpg",  
-  "/images/photo20.jpg",
-  "/images/photo9.jpg",
-  "/images/photo1.jpg",
   "/images/photo18.jpg",
-  "/images/photo13.jpg"
-
+  "/images/photo19.jpg",
+  "/images/photo20.jpg",
+  "/images/photo21.jpg",
+  "/images/photo22.jpg",
+  "/images/photo23.jpg",
+  "/images/photo24.jpg",
+  "/images/photo25.jpg",
+  "/images/photo26.jpg"
 ];
 
 const birthdayDate = new Date("2026-03-20T00:00:00+05:30");
@@ -531,6 +528,7 @@ export default function BirthdaySurpriseWebsite() {
   const [countdown, setCountdown] = useState(getCountdown());
   const [candlesLit, setCandlesLit] = useState(initialCandles);
   const [blowing, setBlowing] = useState(false);
+  const [showCandleMessage, setShowCandleMessage] = useState(false);
   const [musicPlaying, setMusicPlaying] = useState(false);
   const [musicReady, setMusicReady] = useState(false);
   const [cinematicMode, setCinematicMode] = useState(false);
@@ -723,6 +721,7 @@ export default function BirthdaySurpriseWebsite() {
   const handleBlowCandles = () => {
     if (blowing) return;
     setBlowing(true);
+    setShowCandleMessage(false);
     setCinematicMode(true);
     setShowSpotlight(true);
 
@@ -733,11 +732,12 @@ export default function BirthdaySurpriseWebsite() {
     setTimeout(() => {
       setCelebrate(true);
       setFireworks(true);
+      setShowCandleMessage(true);
     }, 1300);
 
-    setTimeout(() => {
-      document.getElementById('letter-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 1900);
+    // setTimeout(() => {
+    //   document.getElementById("letter-section")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    // }, 1900);
 
     setTimeout(() => setCelebrate(false), 7000);
     setTimeout(() => setFireworks(false), 8800);
@@ -859,7 +859,6 @@ export default function BirthdaySurpriseWebsite() {
                   <Gift className="h-5 w-5 transition group-hover:rotate-12" />
                   Open Your Surprise
                 </button>
-                
               </div>
 
               {opened && (
@@ -869,7 +868,7 @@ export default function BirthdaySurpriseWebsite() {
                   </p>
                   <p className="inline-flex items-center gap-2 text-sm text-white/80">
                     <Volume2 className="h-4 w-4" />
-                    {musicReady ? "" : ""}
+                    {musicReady ? "Song file detected. Use public/music/romantic-song.mp3" : "Add your song to public/music/romantic-song.mp3"}
                   </p>
                 </div>
               )}
@@ -898,7 +897,7 @@ export default function BirthdaySurpriseWebsite() {
                     </motion.div>
                     <div className="min-w-0 flex-1 text-center sm:text-left">
                       <p className="text-xs uppercase tracking-[0.3em] text-white/55">Now Playing...</p>
-                      <h3 className="mt-2 break-all text-2xl font-bold text-white sm:truncate">Theeks Birthday Special Song</h3>
+                      <h3 className="mt-2 break-all text-2xl font-bold text-white sm:truncate">Theeks's Birthday Special Song</h3>
                       <p className="mt-1 text-sm text-white/70">
                         {musicPlaying ? "Playing softly in the background" : musicReady ? "Ready to play your love song" : "Add the file to public/music"}
                       </p>
@@ -969,8 +968,8 @@ export default function BirthdaySurpriseWebsite() {
         <section id="gallery-section" className="relative px-6 py-14 md:py-20">
           <div className="mx-auto max-w-6xl">
             <div className="mb-10 text-center">
-              <h2 className="text-3xl font-black md:text-5xl" style={{ fontFamily: scriptFont, fontWeight: 400 }}>A Gallery of Sweet You</h2>
-              <p className="mt-3 text-white/80">By the way, This is not much to show, but these are the moments captured that matter most. See how tiny little rose became this beautiful person!</p>
+              <h2 className="text-3xl font-black md:text-5xl" style={{ fontFamily: scriptFont, fontWeight: 400 }}>A Gallery Full of Sweet Memories</h2>
+              <p className="mt-3 text-white/80">By the way, This is not much to show, but these are the moments that matter most.</p>
             </div>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {photos.map((photo, index) => (
@@ -1040,6 +1039,7 @@ export default function BirthdaySurpriseWebsite() {
                     onClick={() => {
                       setCandlesLit(initialCandles);
                       setBlowing(false);
+                      setShowCandleMessage(false);
                     }}
                     className="rounded-full border border-white/25 bg-white/10 px-8 py-4 font-semibold text-white shadow-xl backdrop-blur-xl transition hover:scale-105"
                   >
@@ -1047,9 +1047,19 @@ export default function BirthdaySurpriseWebsite() {
                   </button>
                 </div>
 
-                <p className="mt-5 text-sm text-pink-100/90 md:text-base">
-                  Hoooorayyy! The candles are out and the magic is in the air. Scroll down for a very special birthday letter and some heart-melting reasons why you are the most amazing person ever!  
-                </p>
+                <AnimatePresence>
+                  {showCandleMessage && (
+                    <motion.p
+                      initial={{ opacity: 0, y: 18 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      transition={{ duration: 0.55, ease: "easeOut" }}
+                      className="mt-5 text-sm text-pink-100/90 md:text-base"
+                    >
+                      Hoooorayyy! The candles are out and the magic is in the air. Scroll down for a very special birthday letter and some heart-melting reasons why you are the most amazing person ever!  
+                    </motion.p>
+                  )}
+                </AnimatePresence>
               </div>
             </motion.div>
           </div>
@@ -1064,7 +1074,7 @@ export default function BirthdaySurpriseWebsite() {
               className="rounded-[2.2rem] border border-white/20 bg-white/10 p-8 shadow-2xl backdrop-blur-xl"
             >
               <div className="mb-5 inline-flex rounded-full bg-white/10 p-3">
-              <Heart className="h-6 w-6 text-pink-200" />
+                <Heart className="h-6 w-6 text-pink-200" />
               </div>
               <h2 className="text-3xl font-black" style={{ fontFamily: scriptFont, fontWeight: 400 }}>A Little Birthday Letter</h2>
               <p className="mt-5 leading-8 text-white/85">
@@ -1174,16 +1184,18 @@ export default function BirthdaySurpriseWebsite() {
                         For Beloved Theeks..
                       </h4>
                       <div className="mt-4 h-px w-full bg-gradient-to-r from-amber-300 via-rose-300 to-cyan-300" />
-                      {/* Kiss 1 */}
-                      <p className="mt-5 text-slate-700 flex items-center gap-2" 
-                        style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '1.4rem', lineHeight: 1.85 }}>
-                        Ummmaaaahhhh 💋✨
+                      <p
+                        className="mt-5 text-slate-700 flex items-center gap-2"
+                        style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '1.4rem', lineHeight: 1.85 }}
+                      >
+                        Ummmmmaaaaaaaaaaaahhhhhhhhhhhhhhh 💋✨
                       </p>
 
-                      {/* Kiss 2 */}
-                      <p className="mt-4 text-slate-700 flex items-center gap-2" 
-                        style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '1.4rem', lineHeight: 1.85 }}>
-                        Mmmwwwaahhh 😘❤️
+                      <p
+                        className="mt-4 text-slate-700 flex items-center gap-2"
+                        style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '1.4rem', lineHeight: 1.85 }}
+                      >
+                        Mmmmmmmwwwwwwaaaaaaahhhhhhhh 😘❤️🔥
                       </p>
                       <p className="mt-5 text-rose-500" style={{ fontFamily: scriptFont, fontSize: '1.6rem', fontWeight: 400 }}>
                         With all my love 💖
@@ -1233,10 +1245,7 @@ export default function BirthdaySurpriseWebsite() {
               viewport={{ once: true }}
               className="mb-8"
             >
-              <h2
-                className="text-3xl font-black md:text-5xl"
-                style={{ fontFamily: scriptFont, fontWeight: 400 }}
-              >
+              <h2 className="text-3xl font-black md:text-5xl" style={{ fontFamily: scriptFont, fontWeight: 400 }}>
                 More Little Moments With You
               </h2>
               <p className="mx-auto mt-3 max-w-2xl text-white/80">
